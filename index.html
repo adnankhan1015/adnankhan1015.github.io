@@ -13,6 +13,11 @@
     <!-- Bootstrap 4 CDN -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
         integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <!-- Toastr CDN-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"
+        integrity="sha512-vKMx8UnXk60zUwyUnUPM3HbQo8QfmNx7+ltw8Pm5zLusl1XIfwcxo8DbWCqMGKaWeNxWA8yrx5v3SaVpMvR3CA=="
+        crossorigin="anonymous" />
     <!-- Custom CSS -->
     <link rel="stylesheet" href="./css/style.css">
 
@@ -26,11 +31,12 @@
                 <div class="col-md-8 offset-md-2 ">
                     <div class="input-group mb-3">
                         <input class="form-control form-control-lg border-secondary border-right-0 rounded-0"
-                            type="text" placeholder="Search" id="searchBar">
+                            type="text" placeholder="Enter Artist Name" id="searchBar">
                         <div class="input-group-append">
                             <button id="btnSearchSubmit"
                                 class="btn btn-outline-secondary border-left-0 rounded-0 rounded-righ" type="button"
-                                onclick="onClick()"><i class="fa fa-search fa-lg"></i></button>
+                                onclick="onClick()" data-toggle="tooltip" title="Click Here for Search Artist"><i
+                                    class="fa fa-search fa-lg"></i></button>
                         </div>
                     </div>
                 </div>
@@ -44,16 +50,14 @@
         <div class="container">
             <div class="row mt-4">
                 <div class="col-md-12">
-                    <p id="resultsStatus"><strong>1 Results found for "Adeel"</strong></p>
+                    <p id="resultsStatus"><strong>Result found for "Adeela"</strong></p>
                 </div>
-
             </div>
+
             <div class="container" id="resultsRoot">
-
                 <div class="row">
-
-                    <div class="col-md-4 mb-2">
-                        <a href="results.html">
+                    <div id="searchItem" class="col-md-4 mb-2">
+                        <a>
                             <div class="card">
                                 <div class="card-body ">
                                     <div class="row  ">
@@ -80,13 +84,20 @@
     <!-- JQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous">
+    <!-- tooltip -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+        integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous">
     </script>
     <!-- Bootstrap CDN -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
     </script>
+
+    <!-- Toastr CDN-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"
+        integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw=="
+        crossorigin="anonymous"></script>
+
     <!-- Custom JS -->
     <script src="./js/helpers.js"></script>
 
@@ -94,8 +105,13 @@
     <script>
         function onClick() {
             let searchText = document.getElementById('searchBar').value;
+            if (!isSearchEntryValid(searchText)) {
+                toastr.error('Invalid Search Entry');
+                return;
+            };
+
             $.ajax({
-                url: getURL(searchText),
+                url: getArtistsURL(searchText),
                 //artist = API Response object
                 success: function (artist) {
                     let searchResults = getStrongTag(`No Results found for "${searchText}"`);
@@ -108,12 +124,11 @@
                 },
                 //onFailure
                 fail: function (xhr, textStatus, errorThrown) {
-                    alert('request failed');
+                    toastr.error('request failed');
                 }
             });
         }
     </script>
-
 </body>
 
 </html>
