@@ -13,152 +13,108 @@
     <!-- Bootstrap CDN -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
         integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <!-- Toastr CDN-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"
+        integrity="sha512-vKMx8UnXk60zUwyUnUPM3HbQo8QfmNx7+ltw8Pm5zLusl1XIfwcxo8DbWCqMGKaWeNxWA8yrx5v3SaVpMvR3CA=="
+        crossorigin="anonymous" />
+
     <!-- Custom CSS -->
     <link rel="stylesheet" href="./css/style.css">
 
 </head>
 
 <body>
-
-
     <section>
         <div class="container">
             <div class="row mt-4">
                 <div class="col-md-12">
-                    <a href="index.html"> <strong> <i class="fa fa-angle-left mr-1"></i> Back to results</strong> </a>
+                    <a href="index.html" data-toggle="tooltip" title="Back to Home Page"> <strong> <i
+                                class="fa fa-angle-left mr-1"></i> Back to results</strong> </a>
                 </div>
 
             </div>
+            <!-- Artist Info -->
+            <div id="artistInfo" class="mt-3"></div>
+            <!-- Dropdown for select events -->
             <div class="row">
-
-                <div class="col-md-4 mb-2 mt-4">
-                    <div class="card">
-                        <div class="card-body ">
-                            <div class="row  ">
-                                <div class="col-sm-5 col-md-5 col-lg-4 ">
-                                    <img src="./img/12.jpg" class="artist-img d-block mx-auto mx-md-0" alt="">
-                                </div>
-                                <div class="col-sm-7 col-md-7 col-lg-8 artist-des ">
-
-                                    <h5>Adeel Arshid </h5>
-                                    <p>facebook.com/adeelarshid</p>
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-            <div class="row">
-                <div class="col-md-12">
-                    <p>8 upcoming events</p>
+                <div class="col-md-4 my-3">
+                    <label for="eventsType">Select Events </label>
+                    <select value="all" name="eventsType" id="eventsType" class="custom-select"
+                        onchange="ddlEventsTypeOnChange(this)">
+                        <option value="all">All</option>
+                        <option value="upcoming">Upcoming</option>
+                        <option value="past">Past</option>
+                    </select>
                 </div>
             </div>
 
-            <div class="row events" id="events">
-                <div class="col-md-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5>EVENT DETAILS </h5>
-                            <hr>
-                            <div class="row no-wrap">
-                                <div class="col-xs-6 col-sm-6 col-md-6 ">
-
-                                    <p><strong> Country</strong></p>
-                                    <p>Pakistan</p>
-
-                                    <p> <strong> Venue</strong></p>
-                                    <p>Avari Hotel</p>
-
-                                </div>
-                                <div class="col-xs-6 col-sm-6 col-md-6">
-
-                                    <p><strong> City</strong></p>
-                                    <p>Lahore</p>
-
-                                    <p> <strong> Date</strong></p>
-                                    <p>12 Dec, 2020</p>
-
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5>EVENT DETAILS </h5>
-                            <hr>
-                            <div class="row no-wrap">
-                                <div class="col-xs-6 col-sm-6 col-md-6 ">
-
-                                    <p><strong> Country</strong></p>
-                                    <p>Pakistan</p>
-
-                                    <p> <strong> Venue</strong></p>
-                                    <p>Avari Hotel</p>
-
-                                </div>
-                                <div class="col-xs-6 col-sm-6 col-md-6">
-
-                                    <p><strong> City</strong></p>
-                                    <p>Lahore</p>
-
-                                    <p> <strong> Date</strong></p>
-                                    <p>12 Dec, 2020</p>
-
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5>EVENT DETAILS </h5>
-                            <hr>
-                            <div class="row no-wrap">
-                                <div class="col-xs-6 col-sm-6 col-md-6 ">
-
-                                    <p><strong> Country</strong></p>
-                                    <p>Pakistan</p>
-
-                                    <p> <strong> Venue</strong></p>
-                                    <p>Avari Hotel</p>
-
-                                </div>
-                                <div class="col-xs-6 col-sm-6 col-md-6">
-
-                                    <p><strong> City</strong></p>
-                                    <p>Lahore</p>
-
-                                    <p> <strong> Date</strong></p>
-                                    <p>12 Dec, 2020</p>
-
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
+            <!-- Show events detail -->
+            <div id='eventsContainer'></div>
         </div>
     </section>
 
     <!-- JQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous">
+    <!-- tooltip -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+        integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous">
     </script>
     <!-- Bootstrap CDN -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
+    </script>
+
+    <!-- Toastr CDN-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"
+        integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw=="
+        crossorigin="anonymous"></script>
+
+    <!-- Custom JS -->
+    <script src="./js/helpers.js"></script>
+    <script>
+        const ddlEventsTypeOnChange = (selectEventType) => {
+            let allQueryParams = getQueryParams();
+            //make api call if artistname is present
+            if (isArtistProvided(allQueryParams)) {
+                callApi(extractArtistName(allQueryParams[0]), selectEventType.value);
+            }
+        }
+
+        const callApi = (artistName, eventsType = 'all') => {
+            $.ajax({
+                url: getEventsURL(artistName, eventsType),
+                //artist = API Response object
+                success: function (events) {
+                    if (events !== undefined && events.length > 0) {
+                        let eventsHtmlWrapper = getEventsSummaryTemplate(events.length, eventsType);
+                        eventsHtmlWrapper += '<div class="row events mb-2" id="events">'
+                        events.map(eventObj => {
+                            eventsHtmlWrapper += getEventsTemplate(eventObj);
+                        });
+                        eventsHtmlWrapper += "</div>"
+                        document.getElementById('eventsContainer').innerHTML = eventsHtmlWrapper;
+                        document.getElementById('artistInfo').innerHTML = getArtistHtml(events[0]
+                            .artist);
+                    } else {
+                        toastr.error('No Upcoming Events Found');
+                        document.getElementById('eventsContainer').innerHTML = '';
+                    }
+                },
+                //onFailure
+                fail: function (xhr, textStatus, errorThrown) {
+                    toastr.error('request failed');
+                }
+            });
+        }
+
+        window.onload = () => {
+            let allQueryParams = getQueryParams();
+            //make api call if artistname is present
+            if (isArtistProvided(allQueryParams)) {
+                callApi(extractArtistName(allQueryParams[0]));
+            }
+        }
     </script>
 
 </body>

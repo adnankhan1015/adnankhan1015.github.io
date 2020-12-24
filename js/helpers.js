@@ -1,11 +1,13 @@
 const baseApi = 'rest.bandsintown.com';
 
+// Search Box Validation 
+const isSearchEntryValid = (searchText) => searchText && searchText !== undefined && searchText.length > 0;
 
 // Get Artist Data
 const getArtistHtml = (artist) => `
 <div class="row">
     <div class="col-md-4 mb-2">
-        <a href="results.html">
+        <a href="./results.html?artist=${artist.name}" data-toggle="tooltip" title="Click Here to show artist events">
             <div class="card">
                 <div class="card-body ">
                     <div class="row  ">
@@ -30,7 +32,60 @@ const getArtistHtml = (artist) => `
 const getStrongTag = (searchText) => `<strong>${searchText}</strong>`;
 
 // Api Call
-const getURL = (searchText) => `https://${baseApi}/artists/${searchText}?app_id=123`;
+const getArtistsURL = (searchText) => `https://${baseApi}/artists/${searchText}?app_id=123`;
+
+const getEventsURL = (artistName, eventType = 'all') => `https://${baseApi}/artists/${artistName}/events?app_id=123&date=${eventType}`;
 
 // Check Artist 
 const artistExist = (artist) => artist && artist !== undefined && artist !== '';
+
+//Getting query param
+const getQueryParams = () => (window.location.search.substring(1) || '').split('&');
+
+//Is artist query param provided
+const isArtistProvided = (allqueryParams) => allqueryParams[0].includes('artist') ? allqueryParams[0] : '';
+
+//extract artistName
+const extractArtistName = (artistQueryParam) => artistQueryParam.split('=')[1];
+
+// Show Total Number of events
+const getEventsSummaryTemplate = (count, eventType = 'all') => `
+<div class="row">
+    <div class="col-md-12">
+        <p>${count} ${eventType} Events</p>
+    </div>
+</div>
+`;
+
+const getEventsTemplate = (event) => `
+    <div class="col-md-4 mb-3">
+        <div class="card">
+            <div class="card-body">
+                <h5>EVENT DETAILS </h5>
+                <hr>
+                <div class="row no-wrap">
+                    <div class="col-xs-6 col-sm-6 col-md-6 ">
+                        <p><strong> Country</strong></p>
+                        <p>${event.venue.country}</p>
+
+                        <p> <strong> Venue</strong></p>
+                        <p>${event.venue.name}</p>
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-6">
+                        <p><strong> City</strong></p>
+                        <p>${event.venue.city}</p>
+
+                        <p> <strong> Date</strong></p>
+                        <p>${new Date(event.datetime).toDateString()}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+`;
+
+
+// init tooltip
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+})
