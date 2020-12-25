@@ -1,7 +1,7 @@
 const baseApi = 'rest.bandsintown.com';
 
 // Search Box Validation 
-const isSearchEntryValid = (searchText) => searchText && searchText !== undefined && searchText.length > 0;
+const isSearchEntryValid = (searchText) => searchText !== undefined && searchText.length > 0;
 
 // Get Artist Data
 const getArtistHtml = (artist) => `
@@ -43,13 +43,13 @@ const artistExist = (artist) => artist && artist !== undefined && artist !== '';
 const getQueryParams = () => (window.location.search.substring(1) || '').split('&');
 
 //Is artist query param provided
-const isArtistProvided = (allqueryParams) => allqueryParams[0].includes('artist') ? allqueryParams[0] : '';
+const isArtistProvided = (allqueryParams) => allqueryParams[0].toLowerCase().includes('artist');
 
 //extract artistName
-const extractArtistName = (artistQueryParam) => artistQueryParam.split('=')[1];
+const extractArtistName = (artistQueryParam) => artistQueryParam.split('=')[1] || '';
 
 // Show Total Number of events
-const getEventsSummaryTemplate = (count, eventType = 'all') => `
+const getEventsSummary = (count, eventType = 'all') => `
 <div class="row">
     <div class="col-md-12">
         <p>${count} ${eventType} Events</p>
@@ -57,7 +57,7 @@ const getEventsSummaryTemplate = (count, eventType = 'all') => `
 </div>
 `;
 
-const getEventsTemplate = (event) => `
+const getEventCards = (event) => `
     <div class="col-md-4 mb-3">
         <div class="card">
             <div class="card-body">
@@ -84,8 +84,34 @@ const getEventsTemplate = (event) => `
     </div>
 `;
 
+//setting the innerHTML of artist section on index.html
+const setArtistTileSection = (innerHtml) => document.getElementById('artistTileSection').innerHTML = innerHtml;
 
-// init tooltip
-$(function () {
-    $('[data-toggle="tooltip"]').tooltip()
-})
+//setting the innerHTML of result status section on index.html
+const setResultStatusSection = (innerHtml) =>  document.getElementById('resultsStatus').innerHTML = innerHtml;
+
+//setting the innerHTML of events container section on results.html
+const setEventsContainerSection = (innerHtml) =>  document.getElementById('eventsContainer').innerHTML = innerHtml;
+
+//Checking the validity of events fetched via API Call
+const eventsExist = (events) => events !== undefined && events.length > 0;
+
+export {
+    isSearchEntryValid,
+    artistExist,
+    getArtistsURL,
+    getStrongTag,
+    getArtistHtml,
+    setArtistTileSection,
+    setResultStatusSection,
+
+    //results.html exports starts from here on
+    getEventsURL,
+    getQueryParams,
+    isArtistProvided,
+    extractArtistName,
+    getEventsSummary,
+    getEventCards,
+    setEventsContainerSection,
+    eventsExist
+}

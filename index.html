@@ -35,7 +35,7 @@
                         <div class="input-group-append">
                             <button id="btnSearchSubmit"
                                 class="btn btn-outline-secondary border-left-0 rounded-0 rounded-righ" type="button"
-                                onclick="onClick()" data-toggle="tooltip" title="Click Here for Search Artist"><i
+                                data-toggle="tooltip" title="Click Here for Search Artist"><i
                                     class="fa fa-search fa-lg"></i></button>
                         </div>
                     </div>
@@ -54,7 +54,7 @@
                 </div>
             </div>
 
-            <div class="container" id="resultsRoot">
+            <div class="container" id="artistTileSection">
                 <div class="row">
                     <div id="searchItem" class="col-md-4 mb-2">
                         <a>
@@ -87,47 +87,68 @@
     <!-- tooltip -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
         integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous">
-    </script>
+        </script>
     <!-- Bootstrap CDN -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
-    </script>
+        </script>
 
     <!-- Toastr CDN-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"
         integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw=="
         crossorigin="anonymous"></script>
 
-    <!-- Custom JS -->
-    <script src="./js/helpers.js"></script>
-
     <!-- API Call using AJAX -->
-    <script>
-        function onClick() {
+    <script type="module">
+        import {
+            isSearchEntryValid,
+            artistExist,
+            getArtistsURL,
+            getStrongTag,
+            getArtistHtml,
+            setArtistTileSection,
+            setResultStatusSection
+        } from './js/helpers.js';
+
+        //Search button click handler
+        document.getElementById('btnSearchSubmit').addEventListener('click', () => {
+
+            //Get search bar value
             let searchText = document.getElementById('searchBar').value;
+
+            //Is search bar entry valid?
             if (!isSearchEntryValid(searchText)) {
                 toastr.error('Invalid Search Entry');
+
+                //Return if invalid
                 return;
             };
 
+            //Search bar validation successful
             $.ajax({
                 url: getArtistsURL(searchText),
                 //artist = API Response object
-                success: function (artist) {
-                    let searchResults = getStrongTag(`No Results found for "${searchText}"`);
-                    document.getElementById('resultsRoot').innerHTML = '';
-                    if (artistExist(artist)) {
-                        searchResults = getStrongTag(`Result found for "${searchText}"`);
-                        document.getElementById('resultsRoot').innerHTML = getArtistHtml(artist);
+                success: function (artistApiResponse) {
+                    let searchResultMsg = getStrongTag(`No Results found for "${searchText}"`);
+                    setArtistTileSection('');
+                    if (artistExist(artistApiResponse)) {
+                        searchResultMsg = getStrongTag(`Result found for "${searchText}"`);
+                        //Get Artist Tile and append into html code
+                        setArtistTileSection(getArtistHtml(artistApiResponse));
                     }
-                    document.getElementById('resultsStatus').innerHTML = searchResults;
+                    setResultStatusSection(searchResultMsg);
                 },
                 //onFailure
                 fail: function (xhr, textStatus, errorThrown) {
                     toastr.error('request failed');
                 }
             });
-        }
+        });
+
+        // init tooltip
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
     </script>
 </body>
 
