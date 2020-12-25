@@ -35,7 +35,7 @@
                         <div class="input-group-append">
                             <button id="btnSearchSubmit"
                                 class="btn btn-outline-secondary border-left-0 rounded-0 rounded-righ" type="button"
-                                onclick="onClick()" data-toggle="tooltip" title="Click Here for Search Artist"><i
+                                data-toggle="tooltip" title="Click Here for Search Artist"><i
                                     class="fa fa-search fa-lg"></i></button>
                         </div>
                     </div>
@@ -54,7 +54,7 @@
                 </div>
             </div>
 
-            <div class="container" id="resultsRoot">
+            <div class="container" id="artistTileSection">
                 <div class="row">
                     <div id="searchItem" class="col-md-4 mb-2">
                         <a>
@@ -66,7 +66,7 @@
                                         </div>
                                         <div class="col-sm-7 col-md-7 col-lg-8 artist-des ">
 
-                                            <h5>Adeel Arshid </h5>
+                                            <h5>Adeela Arshid </h5>
                                             <p>facebook.com/adeelarshid</p>
 
                                         </div>
@@ -98,36 +98,57 @@
         integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw=="
         crossorigin="anonymous"></script>
 
-    <!-- Custom JS -->
-    <script src="./js/helpers.js"></script>
-
     <!-- API Call using AJAX -->
-    <script>
-        function onClick() {
+    <script type="module">
+        import {
+            isSearchEntryValid,
+            artistExist,
+            getArtistsURL,
+            getStrongTag,
+            getArtistHtml,
+            setArtistTileSection,
+            setResultStatusSection
+        } from './js/helpers.js';
+
+        //Search button click handler
+        document.getElementById('btnSearchSubmit').addEventListener('click', () => {
+
+            //Get search bar value
             let searchText = document.getElementById('searchBar').value;
+
+            //Is search bar entry valid?
             if (!isSearchEntryValid(searchText)) {
                 toastr.error('Invalid Search Entry');
+
+                //Return if invalid
                 return;
             };
 
+            //Search bar validation successful
             $.ajax({
                 url: getArtistsURL(searchText),
                 //artist = API Response object
-                success: function (artist) {
-                    let searchResults = getStrongTag(`No Results found for "${searchText}"`);
-                    document.getElementById('resultsRoot').innerHTML = '';
-                    if (artistExist(artist)) {
-                        searchResults = getStrongTag(`Result found for "${searchText}"`);
-                        document.getElementById('resultsRoot').innerHTML = getArtistHtml(artist);
+                success: function (artistApiResponse) {
+                    let searchResultMsg = getStrongTag(`No Results found for "${searchText}"`);
+                    setArtistTileSection('');
+                    if (artistExist(artistApiResponse)) {
+                        searchResultMsg = getStrongTag(`Result found for "${searchText}"`);
+                        //Get Artist Tile and append into html code
+                        setArtistTileSection(getArtistHtml(artistApiResponse));
                     }
-                    document.getElementById('resultsStatus').innerHTML = searchResults;
+                    setResultStatusSection(searchResultMsg);
                 },
                 //onFailure
                 fail: function (xhr, textStatus, errorThrown) {
                     toastr.error('request failed');
                 }
             });
-        }
+        });
+
+        // init tooltip
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
     </script>
 </body>
 
