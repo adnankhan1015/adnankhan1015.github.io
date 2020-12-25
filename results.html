@@ -112,7 +112,7 @@
                         //Setting the artist tile section's innerHTML
                         setArtistTileSection(getArtistHtml(eventsApiResponse[0].artist));
                     } else {
-                        toastr.error('No Upcoming Events Found');
+                        toastr.info('No Upcoming Events Found');
                         setEventsContainerSection('');
                     }
                 },

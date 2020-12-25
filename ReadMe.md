@@ -1,5 +1,7 @@
 # Coding Exercise
 
+To use this app: `https://adnankhan1015.github.io/`
+
 This repo includes my coding exercise with the following pages:
 
 * Index.html
