@@ -31,13 +31,14 @@ const getArtistHtml = (artist) => `
 // Message 
 const getStrongTag = (searchText) => `<strong>${searchText}</strong>`;
 
-// Api Call
+// Api Call artists
 const getArtistsURL = (searchText) => `https://${baseApi}/artists/${searchText}?app_id=123`;
 
+// App Call for events
 const getEventsURL = (artistName, eventType = 'all') => `https://${baseApi}/artists/${artistName}/events?app_id=123&date=${eventType}`;
 
 // Check Artist 
-const artistExist = (artist) => artist && artist !== undefined && artist !== '';
+const artistExist = (artist) => artist !== undefined && artist !== '';
 
 //Getting query param
 const getQueryParams = () => (window.location.search.substring(1) || '').split('&');
@@ -88,10 +89,10 @@ const getEventCards = (event) => `
 const setArtistTileSection = (innerHtml) => document.getElementById('artistTileSection').innerHTML = innerHtml;
 
 //setting the innerHTML of result status section on index.html
-const setResultStatusSection = (innerHtml) =>  document.getElementById('resultsStatus').innerHTML = innerHtml;
+const setResultStatusSection = (innerHtml) => document.getElementById('resultsStatus').innerHTML = innerHtml;
 
 //setting the innerHTML of events container section on results.html
-const setEventsContainerSection = (innerHtml) =>  document.getElementById('eventsContainer').innerHTML = innerHtml;
+const setEventsContainerSection = (innerHtml) => document.getElementById('eventsContainer').innerHTML = innerHtml;
 
 //Checking the validity of events fetched via API Call
 const eventsExist = (events) => events !== undefined && events.length > 0;
